@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <title>Izračun dobi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            text-align: center;
+        }
+        input {
+            width: 60px;
+            padding: 6px;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        #vrijeme {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Zadatak 7 – Dob i vrijeme</h2>
+
+    <form onsubmit="izracunajDob(event)">
+        <label>Dan:</label>
+        <input type="number" id="dan" min="1" max="31" required><br>
+
+        <label>Mjesec:</label>
+        <input type="number" id="mjesec" min="1" max="12" required><br>
+
+        <label>Godina:</label>
+        <input type="number" id="godina" min="1900" max="2100" required><br>
+
+        <button type="submit">Izračunaj</button>
+    </form>
+
+    <p id="vrijeme"></p>
+
+    <script>
+        function leadingZero(broj) {
+            return broj < 10 ? "0" + broj : broj;
+        }
+
+        function izracunajDob(event) {
+            event.preventDefault();
+
+            const dan = parseInt(document.getElementById("dan").value);
+            const mjesec = parseInt(document.getElementById("mjesec").value) - 1; // mjeseci idu od 0
+            const godina = parseInt(document.getElementById("godina").value);
+
+            const datumRodjenja = new Date(godina, mjesec, dan);
+            const sada = new Date();
+
+            let godine = sada.getFullYear() - datumRodjenja.getFullYear();
+            let mjeseci = sada.getMonth() - datumRodjenja.getMonth();
+            let dani = sada.getDate() - datumRodjenja.getDate();
+
+            if (dani < 0) {
+                mjeseci--;
+                const prosliMjesec = new Date(sada.getFullYear(), sada.getMonth(), 0);
+                dani += prosliMjesec.getDate();
+            }
+
+            if (mjeseci < 0) {
+                godine--;
+                mjeseci += 12;
+            }
+
+            const sati = leadingZero(sada.getHours());
+            const minute = leadingZero(sada.getMinutes());
+            const sekunde = leadingZero(sada.getSeconds());
+
+            const vrijemeString = `Trenutno vrijeme: ${sati}:${minute}:${sekunde}`;
+            document.getElementById("vrijeme").innerText = vrijemeString;
+
+            alert(`Imate ${godine} godina, ${mjeseci} mjeseci i ${dani} dana.`);
+        }
+    </script>
+
+</body>
+</html>
